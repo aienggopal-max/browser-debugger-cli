@@ -7,6 +7,7 @@ import { validateIPCResponse } from '@/ipc/responseValidator.js';
 import type { BdgOutput } from '@/types.js';
 import { formatPreview, type PreviewOptions } from '@/ui/formatters/preview.js';
 import { invalidLastArgumentError } from '@/ui/messages/commands.js';
+import { peekFollowDeprecationWarning } from '@/ui/messages/deprecation.js';
 import { daemonNotRunningError, noPreviewDataError } from '@/ui/messages/errors.js';
 import { followingPreviewMessage, stoppedFollowingPreviewMessage } from '@/ui/messages/preview.js';
 import { EXIT_CODES } from '@/utils/exitCodes.js';
@@ -117,6 +118,9 @@ export function registerPeekCommand(program: Command): void {
       };
 
       if (options.follow) {
+        // Show deprecation warning
+        console.error(peekFollowDeprecationWarning());
+
         // Follow mode: update every second
         console.error(followingPreviewMessage());
         await showPreview();
